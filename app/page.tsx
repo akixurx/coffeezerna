@@ -1,69 +1,81 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useEffect, useRef, type ReactNode } from "react";
+import { Hero } from "@/components/hero";
+import { MenuSection } from "@/components/menu-section";
+import { About } from "@/components/About";
+import { MenuMarquee } from "@/components/menu-marquee";
+import { Reviews } from "@/components/Reviews";
+import { HeroNav } from "@/components/hero-nav";
+import { Contacts } from "@/components/Contacts";
+import { Footer } from "@/components/Footer";
+import { Preloader } from "@/components/Preloader";
+
+function ScrollLayer({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className: string;
+}) {
+  const layerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const layer = layerRef.current;
+    if (!layer) return;
+
+    const updatePosition = () => {
+      // Long sections scroll fully before their last screen is pinned.
+      const top = Math.min(0, window.innerHeight - layer.getBoundingClientRect().height);
+      layer.style.setProperty("--layer-top", `${top}px`);
+    };
+
+    updatePosition();
+    const observer = new ResizeObserver(updatePosition);
+    observer.observe(layer);
+    window.addEventListener("resize", updatePosition);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updatePosition);
+      layer.style.removeProperty("--layer-top");
+    };
+  }, []);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div
+      ref={layerRef}
+      className={`sticky top-[var(--layer-top,0px)] isolate flow-root bg-[#1a0a05] motion-reduce:relative motion-reduce:top-auto ${className}`}
+    >
+      {children}
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <>
+      <Preloader />
+      <HeroNav />
+      <main className="relative isolate min-h-svh bg-[#1a0a05] text-white">
+        <ScrollLayer className="z-0">
+          <Hero />
+        </ScrollLayer>
+        <ScrollLayer className="z-10">
+          <About />
+        </ScrollLayer>
+        <ScrollLayer className="z-20">
+          <MenuSection />
+          <MenuMarquee />
+        </ScrollLayer>
+        <ScrollLayer className="z-30">
+          <Reviews />
+        </ScrollLayer>
+        <ScrollLayer className="z-40">
+          <Contacts />
+        </ScrollLayer>
+      </main>
+      <Footer />
+    </>
   );
 }
