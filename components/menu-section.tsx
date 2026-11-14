@@ -142,24 +142,19 @@ export function MenuSection() {
               </p>
             </motion.div>
 
-            <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end md:gap-12">
-              <motion.h2
-                variants={sectionReveal}
-                id={`${instanceId}-title`}
-                className={`${serif.className} text-5xl font-normal leading-[1.1] tracking-[-0.04em] sm:text-7xl lg:text-8xl`}
-              >
-                Наше <span className="font-normal italic">меню</span>
-                <span aria-hidden="true" className="text-[#d5b38a]">
-                  .
-                </span>
-              </motion.h2>
+            <h2
+              id={`${instanceId}-title`}
+              className={`${serif.className} text-5xl font-normal leading-[1.1] tracking-[-0.04em] text-white sm:text-7xl lg:text-8xl`}
+            >
+              Наше <span className="font-normal italic">меню</span>
+              <span aria-hidden="true" className="text-[#d5b38a]">
+                .
+              </span>
+            </h2>
 
-              <motion.p variants={sectionReveal} className="max-w-xs text-sm leading-7 text-white/60 md:pb-2">
-                Любимый кофе, свежая выпечка
-                <br />
-                и маленький повод замедлиться.
-              </motion.p>
-            </div>
+            <motion.p variants={sectionReveal} className="mt-6 text-sm leading-7 text-white/60 md:whitespace-nowrap md:text-base">
+              Любимый кофе, свежая выпечка и маленький повод замедлиться.
+            </motion.p>
           </motion.header>
 
           <motion.div

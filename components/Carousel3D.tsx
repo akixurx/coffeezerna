@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react'
 import { motion, useAnimationFrame, useMotionValue, useSpring, useTransform, type MotionValue } from 'framer-motion'
+import { useReducedMotion } from '@/lib/use-reduced-motion'
 
 export type Photo = {
   src: string
@@ -20,7 +21,7 @@ export const PHOTOS: Photo[] = [
 ]
 
 const AUTO_SPEED = 9 // degrees per second
-const MOUSE_SENSITIVITY = 0.35
+const DRAG_SENSITIVITY = 0.35
 
 type CardSize = {
   cardWidth: number
@@ -99,37 +100,34 @@ export default function Carousel3D({ photos = PHOTOS }: { photos?: Photo[] }) {
   const target = useMotionValue(0)
   const rotation = useSpring(target, { stiffness: 90, damping: 22, mass: 0.6 })
 
-  const [isHovering, setIsHovering] = useState(false)
-  const isDragging = useRef(false)
-  const lastX = useRef<number | null>(null)
-  const reducedMotion = useRef(false)
-
-  useEffect(() => {
-    reducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  }, [])
+  const activePointerId = useRef<number | null>(null)
+  const lastX = useRef(0)
+  const reducedMotion = useReducedMotion()
 
   useAnimationFrame((_, delta) => {
-    if (isHovering || isDragging.current || reducedMotion.current) return
+    if (activePointerId.current !== null || reducedMotion) return
     target.set(target.get() - (AUTO_SPEED * delta) / 1000)
   })
 
   const handlePointerMove = (event: PointerEvent<HTMLElement>) => {
-    if (event.pointerType !== 'mouse' && !isDragging.current) return
-    if (lastX.current !== null) {
-      target.set(target.get() + (event.clientX - lastX.current) * MOUSE_SENSITIVITY)
-    }
+    if (event.pointerId !== activePointerId.current) return
+    target.set(target.get() + (event.clientX - lastX.current) * DRAG_SENSITIVITY)
     lastX.current = event.clientX
   }
 
   const handlePointerDown = (event: PointerEvent<HTMLElement>) => {
-    isDragging.current = true
+    if (!event.isPrimary || event.button !== 0 || activePointerId.current !== null) return
+    activePointerId.current = event.pointerId
     lastX.current = event.clientX
-    event.currentTarget.setPointerCapture?.(event.pointerId)
+    event.currentTarget.setPointerCapture(event.pointerId)
   }
 
   const endDrag = (event: PointerEvent<HTMLElement>) => {
-    isDragging.current = false
-    if (event.pointerType !== 'mouse') lastX.current = null
+    if (event.pointerId !== activePointerId.current) return
+    activePointerId.current = null
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId)
+    }
   }
 
   const snapTo = (direction: 1 | -1) => {
@@ -153,24 +151,12 @@ export default function Carousel3D({ photos = PHOTOS }: { photos?: Photo[] }) {
       aria-label="Coffee shop photo gallery"
       tabIndex={0}
       onKeyDown={handleKeyDown}
-      onFocus={() => setIsHovering(true)}
-      onBlur={() => setIsHovering(false)}
-      onPointerEnter={(e) => {
-        setIsHovering(true)
-        lastX.current = e.clientX
-      }}
-      onPointerLeave={() => {
-        setIsHovering(false)
-        isDragging.current = false
-        lastX.current = null
-      }}
       onPointerMove={handlePointerMove}
       onPointerDown={handlePointerDown}
       onPointerUp={endDrag}
       onPointerCancel={endDrag}
-      className={`relative w-full touch-pan-y select-none rounded-3xl outline-none focus-visible:ring-2 focus-visible:ring-[#d5b38a]/60 ${
-        isHovering ? 'cursor-grab active:cursor-grabbing' : ''
-      }`}
+      onLostPointerCapture={endDrag}
+      className="relative w-full cursor-grab touch-pan-y select-none rounded-3xl outline-none focus-visible:ring-2 focus-visible:ring-[#d5b38a]/60 active:cursor-grabbing"
       style={{ height: size.cardHeight + 90, perspective: '1200px', perspectiveOrigin: '50% 45%' }}
     >
       <motion.div className="absolute inset-0 [transform-style:preserve-3d]" style={{ rotateY: rotation }}>

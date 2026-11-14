@@ -104,17 +104,16 @@ export function Reviews() {
             initial="hidden"
             whileInView="visible"
             viewport={revealViewport}
-            className="mx-auto max-w-3xl text-center"
+            className="text-left"
           >
             <motion.div
               variants={textReveal}
-              className="mb-8 flex items-center justify-center gap-4"
+              className="mb-8 flex items-center gap-4"
             >
-              <span aria-hidden="true" className="h-px w-8 bg-[#d5b38a]/40" />
-              <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-[#d5b38a]">
+              <span aria-hidden="true" className="h-px w-10 shrink-0 bg-[#d5b38a]/60" />
+              <p className="whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.3em] text-[#d5b38a]">
                 Zerna · тёплые слова
               </p>
-              <span aria-hidden="true" className="h-px w-8 bg-[#d5b38a]/40" />
             </motion.div>
 
             <motion.h2
@@ -129,7 +128,7 @@ export function Reviews() {
 
             <motion.p
               variants={textReveal}
-              className="mx-auto mt-6 max-w-md text-sm leading-7 text-white/60"
+              className="mt-6 max-w-md text-sm leading-7 text-white/60"
             >
               Самое приятное — знать, что тебе хочется вернуться.
             </motion.p>

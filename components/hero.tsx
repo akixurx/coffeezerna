@@ -13,7 +13,7 @@ export function Hero() {
       {/* Плавный зум с задержкой, чтобы начать после прелоадера */}
       <motion.div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[url('/stakan.jpg')] bg-cover bg-center bg-no-repeat will-change-transform md:bg-[url('/stakan-pc.jpg')]"
+        className="absolute inset-0 -z-10 bg-[url('/stakan123.jpg')] bg-cover bg-center bg-no-repeat will-change-transform md:bg-[url('/stakan-pc.jpg')]"
         initial={{ scale: reduceMotion ? 1 : 1.15, y: 0 }}
         animate={{ scale: 1, y: 0 }}
         transition={{

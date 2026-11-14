@@ -197,7 +197,7 @@ export function About() {
 
           <ul
             aria-label="Почему у нас хорошо"
-            className="mt-16 grid list-none grid-cols-2 border-t border-[#d5b38a]/20 p-0 md:mt-24 lg:grid-cols-4"
+            className="mt-16 grid list-none grid-cols-2 p-0 md:mt-24 lg:grid-cols-4"
           >
             {features.map(({ title, description, icon: Icon }, index) => (
               <motion.li
@@ -209,16 +209,13 @@ export function About() {
                 viewport={revealViewport}
                 className={`group relative border-[#d5b38a]/20 px-4 py-7 odd:border-r sm:px-6 sm:py-9 lg:border-r lg:px-7 lg:last:border-r-0 ${index < 2 ? 'border-b lg:border-b-0' : ''}`}
               >
-                <div className="mb-7 flex items-center justify-between gap-3">
+                <div className="mb-7">
                   <Icon
                     aria-hidden="true"
                     size={26}
                     strokeWidth={1.25}
                     className="text-[#d5b38a] transition-transform duration-500 group-hover:-translate-y-1 motion-reduce:transform-none motion-reduce:transition-none"
                   />
-                  <span aria-hidden="true" className="text-[10px] tabular-nums tracking-widest text-[#d5b38a]/60">
-                    0{index + 1}
-                  </span>
                 </div>
                 <h3 className={`${serif.className} text-xl font-normal text-[#f5ece2] sm:text-2xl`}>
                   {title}

@@ -43,9 +43,7 @@ function MenuCard({
           min-[400px]:h-[330px]
           sm:h-[360px]
           md:rounded-[24px]
-          lg:h-[400px]
-          xl:h-[460px]
-          2xl:h-[520px]
+          lg:h-[320px]
         "
       >
         <motion.img
@@ -90,7 +88,7 @@ function MenuCard({
           className="
             absolute inset-x-0 bottom-0 z-10
             p-3 min-[400px]:p-4
-            lg:p-5 xl:p-6 2xl:p-8
+            lg:p-4 xl:p-5
           "
         >
           <span
@@ -115,9 +113,8 @@ function MenuCard({
               leading-[1.12] tracking-[-0.025em] text-white
               min-[400px]:text-base
               sm:text-[17px]
-              lg:text-lg
-              xl:text-[22px]
-              2xl:text-2xl
+              lg:text-base
+              xl:text-lg
             "
           >
             {item.title}
@@ -160,8 +157,7 @@ function MenuCard({
               mt-3 flex items-center justify-between gap-1.5
               border-t border-white/10 pt-3
               sm:mt-4
-              lg:mt-5 lg:gap-3 lg:pt-4
-              xl:mt-7 xl:pt-5
+              lg:mt-4 lg:gap-3
             "
           >
             <p
@@ -169,7 +165,7 @@ function MenuCard({
                 whitespace-nowrap text-sm font-black
                 leading-none tabular-nums text-white
                 min-[400px]:text-base
-                lg:text-lg xl:text-xl
+                lg:text-lg
               "
             >
               {item.price.toLocaleString('ru-RU')}&nbsp;₽
@@ -252,16 +248,16 @@ export function MenuMarquee() {
         px-2 pb-8 pt-24
         min-[400px]:px-3
         sm:px-5 sm:pb-12
-        md:-mt-24 md:via-[96px] md:pt-36
-        lg:px-7 lg:pb-20
+        md:-mt-24 md:via-[96px] md:px-10 md:pt-36
+        lg:pb-20
       "
     >
       <ul
         className="
-          mx-auto grid max-w-[1440px]
+          mx-auto grid w-full max-w-6xl
           list-none grid-cols-2 gap-1 p-0
           sm:grid-cols-3 sm:gap-1.5
-          lg:grid-cols-4 lg:gap-[2px]
+          lg:grid-cols-4 lg:gap-4
         "
       >
         {/* Теперь перебираем ровно 8 карточек */}
